@@ -1,0 +1,50 @@
+---
+# tasks file for setup_master
+- name: Populate service facts
+  ansible.builtin.service_facts:
+
+- name: install k3s on the master
+  block:
+    - name: install k3s on the master
+      ansible.builtin.shell: /root/k3s_install.sh
+      register: script_result
+
+    - name: script output
+      debug:
+        var: script_result.stdout_lines
+
+    - name: Wait for service k3s to be running
+      ansible.builtin.service_facts:
+      register: result
+      until: result.ansible_facts.services['k3s.service'].state == 'running'
+      retries: 12
+      delay: 5
+  when: ansible_facts.services['k3s.service'] is not defined
+
+- name: Populate service facts
+  ansible.builtin.service_facts:
+
+- name: check if k3s service is running or not
+  block:
+    - name: check if k3s service is running or not
+      ansible.builtin.systemd:
+        name: k3s.service
+      register: k3s_service_status
+
+    - name: service status result
+      debug:
+        var: k3s_service_status.status.ActiveState
+
+    - name: Sleep for 30 seconds and continue with play
+      ansible.builtin.wait_for:
+        timeout: 30
+      delegate_to: localhost
+
+    - name: run kubecl get node
+      ansible.builtin.shell: kubectl get node
+      register: kubectl_result
+
+    - name: kubectl get node result
+      debug:
+        var: kubectl_result.stdout_lines
+  when: ansible_facts.services['k3s.service'] is defined

@@ -1,0 +1,24 @@
+---
+# tasks file for pre_setup
+- name: Populate service facts
+  ansible.builtin.service_facts:
+
+- name: Stop firewalld if installed
+  ansible.builtin.systemd:
+    name: firewalld
+    state: stopped
+  when: "services.keys()|list|select('search', '^firewalld')|length >0"
+
+- name: install recommended packages
+  ansible.builtin.dnf:
+    name: "{{ item }}"
+    state: present
+  loop: 
+    - "{{ package_list }}"
+
+- name: Download k3s_install shell
+  ansible.builtin.get_url:
+    url: https://get.k3s.io
+    dest: /root/k3s_install.sh
+    mode: '0755'
+    validate_certs: false

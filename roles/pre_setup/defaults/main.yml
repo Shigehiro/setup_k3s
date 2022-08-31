@@ -1,0 +1,4 @@
+---
+# defaults file for pre_setup
+package_list:
+  - bash-completion
