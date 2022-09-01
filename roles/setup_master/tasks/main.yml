@@ -1,6 +1,6 @@
 ---
 # tasks file for setup_master
-- name: Populate service facts
+- name: populate service facts
   ansible.builtin.service_facts:
 
 - name: install k3s on the master

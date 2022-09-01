@@ -1,0 +1,18 @@
+---
+- hosts: k3s
+  gather_facts: false
+  tasks:
+  - import_role:
+      name: pre_setup
+
+- hosts: master
+  gather_facts: false
+  tasks:
+  - import_role:
+      name: setup_master
+
+- hosts: k3s
+  gather_facts: false
+  tasks:
+  - import_role:
+      name: setup_worker

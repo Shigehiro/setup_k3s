@@ -1,0 +1,45 @@
+---
+# tasks file for setup_worker
+- name: populate service facts
+  ansible.builtin.service_facts:
+
+- name: get a token of master node
+  ansible.builtin.shell:
+    cmd: cat /var/lib/rancher/k3s/server/node-token
+  register: token_id
+  when: inventory_hostname == groups['master'][0] and ansible_facts.services['k3s.service'] is defined
+
+- name: set fact
+  ansible.builtin.set_fact:
+    token: "{{ hostvars[groups['master'][0]].token_id.stdout }}"
+
+- name: print node token
+  ansible.builtin.debug:
+    var: token
+  run_once: true
+  
+- name: install k3s on the worker nodes
+  block:
+    - name: install k3s on the worker nodes
+      ansible.builtin.shell: /root/k3s_install.sh
+      environment:
+        K3S_URL: https://{{ master_ip }}:6443
+        K3S_TOKEN: "{{ token }}"
+      register: script_result
+    
+    - name: dump result
+      ansible.builtin.debug:
+        msg: "{{ script_result.stdout_lines }}"
+  when: 
+    - "'worker' in group_names"
+    - ansible_facts.services['k3s-agent.service'] is not defined
+
+- name: check if file exists
+  stat: 
+    path: /etc/bash_completion.d/kubectl
+  register: kubectl_completion
+
+- name: enable kubectl bash completion
+  ansible.builtin.shell:
+    cmd: kubectl completion bash | tee /etc/bash_completion.d/kubectl > /dev/null
+  when: kubectl_completion.stat.exists == false
