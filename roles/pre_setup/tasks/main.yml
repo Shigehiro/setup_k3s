@@ -1,9 +1,13 @@
 ---
 # tasks file for pre_setup
-- name: Populate service facts
+- name: set timezone to Asia/Tokyo
+  community.general.timezone:
+    name: Asia/Tokyo
+
+- name: populate service facts
   ansible.builtin.service_facts:
 
-- name: Stop firewalld if installed
+- name: stop firewalld if installed
   ansible.builtin.systemd:
     name: firewalld
     state: stopped
@@ -16,7 +20,7 @@
   loop: 
     - "{{ package_list }}"
 
-- name: Download k3s_install shell
+- name: download k3s_install script
   ansible.builtin.get_url:
     url: https://get.k3s.io
     dest: /root/k3s_install.sh
