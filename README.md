@@ -4,7 +4,7 @@
   - [Description](#description)
   - [Ansible vars](#ansible-vars)
   - [Environment Setup](#environment-setup)
-    - [prepare at least two RedHat8 based nodes. (RHEL8, AlmaLinux8, RockyLinux8)](#prepare-at-least-two-redhat8-based-nodes-rhel8-almalinux8-rockylinux8)
+    - [prepare at least two RHEL8 based nodes. (RHEL8, AlmaLinux8, RockyLinux8)](#prepare-at-least-two-rhel8-based-nodes-rhel8-almalinux8-rockylinux8)
     - [python3 setup](#python3-setup)
     - [edit Ansible inventory file and group vars to meet your environment](#edit-ansible-inventory-file-and-group-vars-to-meet-your-environment)
     - [run the playbook](#run-the-playbook)
@@ -27,10 +27,11 @@ master_ip: 192.168.124.155
 
 ## Environment Setup
 
-### prepare at least two RedHat8 based nodes. (RHEL8, AlmaLinux8, RockyLinux8)
+### prepare at least two RHEL8 based nodes. (RHEL8, AlmaLinux8, RockyLinux8)
 
-- one master node and multiple worker nodes.
-- note that this playbook does not support deploying multiple master nodes.
+- one master node and multiple worker nodes are required.
+- this playbook does not support deploying multiple master nodes.
+- this playbook is not tested on RHEL7, RHEL9.
 
 ### python3 setup
 
@@ -83,6 +84,7 @@ lab02-w01                  : ok=9    changed=2    unreachable=0    failed=0    s
 lab02-w02                  : ok=9    changed=2    unreachable=0    failed=0    skipped=2    rescued=0    ignored=0   
 ```
 
+check cluster status.
 on the master node.
 ```text
 # kubectl cluster-info 
@@ -113,6 +115,7 @@ svclb-traefik-70015156-2992r              2/2     Running     0          9m21s
 #
 ```
 
+deploy containers.
 ```text
 # curl -k https://raw.githubusercontent.com/kubernetes/website/main/content/en/examples/controllers/nginx-deployment.yaml | kubectl apply -f -
 

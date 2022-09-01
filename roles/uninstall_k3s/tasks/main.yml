@@ -32,7 +32,7 @@
     - ansible_facts.services['k3s.service'] is defined
 
 - name: check if file exists
-  stat: 
+  ansible.builtin.stat: 
     path: /etc/bash_completion.d/kubectl
   register: kubectl_completion
 

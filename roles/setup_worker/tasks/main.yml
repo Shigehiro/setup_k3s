@@ -35,7 +35,7 @@
     - ansible_facts.services['k3s-agent.service'] is not defined
 
 - name: check if file exists
-  stat: 
+  ansible.builtin.stat: 
     path: /etc/bash_completion.d/kubectl
   register: kubectl_completion
 
