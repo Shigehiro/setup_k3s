@@ -1,0 +1,6 @@
+---
+- hosts: k3s
+  gather_facts: false
+  tasks:
+  - import_role:
+      name: uninstall_k3s

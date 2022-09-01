@@ -13,7 +13,7 @@
   ansible.builtin.set_fact:
     token: "{{ hostvars[groups['master'][0]].token_id.stdout }}"
 
-- name: print node token
+- name: print a token of master node
   ansible.builtin.debug:
     var: token
   run_once: true

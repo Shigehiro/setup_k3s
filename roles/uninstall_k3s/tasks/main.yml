@@ -1,0 +1,43 @@
+---
+# tasks file for uninstall_k3s
+- name: populate service facts
+  ansible.builtin.service_facts:
+
+- name: uninstall worker nodes
+  block:
+    - name: uninstall worker nodes
+      ansible.builtin.shell:
+        cmd: /usr/local/bin/k3s-agent-uninstall.sh
+      register: uninstall_log
+
+    - name: dump an output
+      ansible.builtin.debug:
+        msg: "{{ uninstall_log.stdout_lines }}"
+  when: 
+    - "'worker' in group_names"
+    - ansible_facts.services['k3s-agent.service'] is defined
+
+- name: uninstall master nodes
+  block:
+    - name: uninstall master nodes
+      ansible.builtin.shell:
+        cmd: /usr/local/bin/k3s-uninstall.sh
+      register: uninstall_log
+
+    - name: dump an output
+      ansible.builtin.debug:
+        msg: "{{ uninstall_log.stdout_lines }}"
+  when: 
+    - "'master' in group_names"
+    - ansible_facts.services['k3s.service'] is defined
+
+- name: check if file exists
+  stat: 
+    path: /etc/bash_completion.d/kubectl
+  register: kubectl_completion
+
+- name: remove kubectl bash completion file
+  ansible.builtin.file:
+    path: /etc/bash_completion.d/kubectl
+    state: absent
+  when: kubectl_completion.stat.exists == true
