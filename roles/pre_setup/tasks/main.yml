@@ -11,6 +11,7 @@
   ansible.builtin.systemd:
     name: firewalld
     state: stopped
+    enabled: false
   when: "services.keys()|list|select('search', '^firewalld')|length >0"
 
 - name: install recommended packages

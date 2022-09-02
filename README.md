@@ -5,7 +5,7 @@
   - [Ansible vars](#ansible-vars)
   - [Environment Setup](#environment-setup)
     - [prepare at least two RHEL8 based nodes. (RHEL8, AlmaLinux8, RockyLinux8)](#prepare-at-least-two-rhel8-based-nodes-rhel8-almalinux8-rockylinux8)
-    - [python3 setup](#python3-setup)
+    - [setup Ansible](#setup-ansible)
     - [edit Ansible inventory file and group vars to meet your environment](#edit-ansible-inventory-file-and-group-vars-to-meet-your-environment)
     - [run the playbook](#run-the-playbook)
   - [How to uninstall k3s on all nodes](#how-to-uninstall-k3s-on-all-nodes)
@@ -33,12 +33,26 @@ master_ip: 192.168.124.155
 - this playbook does not support deploying multiple master nodes.
 - this playbook is not tested on RHEL7, RHEL9.
 
-### python3 setup
+### setup Ansible
+
+You can install ansible via pip3 or dnf/ansible-galaxy.
+Either is fine.
 
 ```text
 # cat /etc/almalinux-release
 AlmaLinux release 8.6 (Sky Tiger)
+```
 
+install ansible via dnf and additional ansible modules by ansible-galaxy.
+```text
+# dnf install -y ansible-core
+# ansible-galaxy collection install community.general
+```
+
+or
+
+install ansible via pip3.
+```text
 # python3 -m venv ansible_env
 # source ansible_env/bin/activate
 # pip3 install --upgrade pip

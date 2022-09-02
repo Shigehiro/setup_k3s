@@ -19,6 +19,11 @@
       until: result.ansible_facts.services['k3s.service'].state == 'running'
       retries: 12
       delay: 5
+
+    - name: sleep for 30 seconds and continue with play
+      ansible.builtin.wait_for:
+        timeout: 30
+      delegate_to: localhost
   when: ansible_facts.services['k3s.service'] is not defined
 
 - name: Populate service facts
@@ -34,11 +39,6 @@
     - name: service status result
       debug:
         var: k3s_service_status.status.ActiveState
-
-    - name: Sleep for 30 seconds and continue with play
-      ansible.builtin.wait_for:
-        timeout: 30
-      delegate_to: localhost
 
     - name: run kubectl get node
       ansible.builtin.shell: kubectl get node
