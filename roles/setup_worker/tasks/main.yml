@@ -31,10 +31,9 @@
       ansible.builtin.debug:
         msg: "{{ script_result.stdout_lines }}"
 
-    - name: sleep for 30 seconds and continue with play
+    - name: sleep for 15 seconds and continue with play
       ansible.builtin.wait_for:
-        timeout: 30
-      delegate_to: localhost
+        timeout: 15
   when: 
     - "'worker' in group_names"
     - ansible_facts.services['k3s-agent.service'] is not defined
