@@ -34,6 +34,7 @@
     - name: sleep for 15 seconds and continue with play
       ansible.builtin.wait_for:
         timeout: 15
+      delegate_to: 127.0.0.1
   when: 
     - "'worker' in group_names"
     - ansible_facts.services['k3s-agent.service'] is not defined

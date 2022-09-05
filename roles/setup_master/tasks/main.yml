@@ -23,6 +23,7 @@
     - name: sleep for 30 seconds and continue with play
       ansible.builtin.wait_for:
         timeout: 30
+      delegate_to: 127.0.0.1
   when: ansible_facts.services['k3s.service'] is not defined
 
 - name: Populate service facts
